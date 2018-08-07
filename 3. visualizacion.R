@@ -20,11 +20,41 @@ visualizar$Mes = as.factor(as.numeric(format(visualizar$Date, "%m")))
 
 dir.create('graficos')
 
-pdf("graficos/grafico.pdf")
+#pdf("graficos/grafico.pdf")
 
-ggplot(visualizar, aes(x = Mes, y=GanaFavorito)) +
+#Mes y deporte donde más gana el favorito
+
+ggplot(visualizar, aes(x = Mes, y=GanaFavorito, fill = GanaFavorito)) +
   geom_bar(stat='identity')+
-    facet_grid(Sport ~ GanaFavorito)
+      facet_grid(~Sport) +
+        ggtitle('Gana favorito por meses y deporte') +
+          theme(legend.position = 'bottom')
 
-dev.off()
+#Comparación de cuotas
 
+ggplot(visualizar, aes(x = CuotaFavorito, col = GanaFavorito)) +
+  geom_density(kernel='gaussian') +
+  ggtitle('Cuotas') +
+  theme(legend.position = 'bottom') + xlim(1,3) +
+  facet_grid(Sport~., scales='free') + labs(y="") +theme_bw()
+
+football = visualizar[visualizar$Sport == 'Football',]
+ 
+ggplot(football, aes(x = Favorito, y=GanaFavorito, fill = GanaFavorito)) +
+  geom_bar(stat='identity')+
+  facet_grid(~Mes) +
+  ggtitle('Local vs Visitante') +
+  theme(legend.position = 'bottom')
+
+#Gana Favorito
+#Fútbol Local y Visitante
+
+
+#dev.off()
+library(scales)
+
+ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., fill = GanaFavorito)) +
+  geom_bar(stat='count', position = 'fill') +
+  ggtitle('Gana favorito por meses y deporte') +
+  theme(legend.position = 'bottom')+ 
+  scale_y_continuous(labels=percent)
