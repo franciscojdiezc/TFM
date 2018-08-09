@@ -1,6 +1,7 @@
 #Primero cargamos librerias.
 
 library(ggplot2)
+library(scales)
 
 #Cargamos el fichero.
 
@@ -22,7 +23,7 @@ dir.create('graficos')
 
 #pdf("graficos/grafico.pdf")
 
-#Mes y deporte donde más gana el favorito
+#1.Mes y deporte donde más gana el favorito
 
 ggplot(visualizar, aes(x = Mes, y=GanaFavorito, fill = GanaFavorito)) +
   geom_bar(stat='identity')+
@@ -30,31 +31,67 @@ ggplot(visualizar, aes(x = Mes, y=GanaFavorito, fill = GanaFavorito)) +
         ggtitle('Gana favorito por meses y deporte') +
           theme(legend.position = 'bottom')
 
-#Comparación de cuotas
 
-ggplot(visualizar, aes(x = CuotaFavorito, col = GanaFavorito)) +
+#1.2Deporte por meses
+ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
+  geom_bar(stat='count', position = 'dodge') +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
+  ggtitle('Gana favorito por deporte') + 
+  scale_y_continuous(labels=percent) + facet_grid(Sport~Mes)
+
+
+#2.Comparación de cuotas
+
+ggplot(visualizar, aes(x = CuotaFavorito, y=..count.., col = GanaFavorito)) +
   geom_density(kernel='gaussian') +
-  ggtitle('Cuotas') +
-  theme(legend.position = 'bottom') + xlim(1,3) +
-  facet_grid(Sport~., scales='free') + labs(y="") +theme_bw()
+  ggtitle('Cuotas') + xlim(1,3) +
+  facet_grid(Sport~., scales='free') + labs(y="") +theme_bw()  +
+  theme(legend.position = 'bottom')
+
+#3.Fútbol Local vs Visitante siendo favorito por meses
 
 football = visualizar[visualizar$Sport == 'Football',]
  
-ggplot(football, aes(x = Favorito, y=GanaFavorito, fill = GanaFavorito)) +
-  geom_bar(stat='identity')+
-  facet_grid(~Mes) +
-  ggtitle('Local vs Visitante') +
-  theme(legend.position = 'bottom')
+ggplot(football, aes(x = GanaFavorito, y=..prop.., group=1,fill = GanaFavorito )) +
+  geom_bar(stat='count', position = 'dodge') +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
+  ggtitle('Local vs Visitante') + 
+  scale_y_continuous(labels=percent) +
+  facet_grid(Favorito~Mes)
 
-#Gana Favorito
-#Fútbol Local y Visitante
 
+#4. Gana Favorito
+
+ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
+  geom_bar(stat='count', position = 'dodge') +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
+  ggtitle('Gana favorito por deporte') + 
+  scale_y_continuous(labels=percent)
+
+
+ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
+  geom_bar(stat='count', position = 'dodge') +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
+  ggtitle('Gana favorito por deporte') + 
+  scale_y_continuous(labels=percent) + facet_grid(~Mes)
+
+##4.3 General por deporte
+ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
+  geom_bar(stat='count', position = 'dodge',fill="lightblue",colour="black") +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
+  ggtitle('Gana favorito por deporte') + 
+  scale_y_continuous(labels=percent) + facet_grid(~Sport)
+
+
+##Hucha por deportes y meses
+
+ggplot(visualizar, aes(x = Sport, y = HuchaC)) +
+  stat_summary(fun.y = sum,geom="bar", fill="lightblue",colour="black", size = 1)+
+  ggtitle('Hucha')
+
+ggplot(visualizar, aes(x = Mes, y = HuchaC)) +
+  stat_summary(fun.y = sum,geom="bar", colour = "red", size = 1)+
+  ggtitle('Hucha') + facet_grid(Sport~. , scales = 'free')
 
 #dev.off()
-library(scales)
 
-ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., fill = GanaFavorito)) +
-  geom_bar(stat='count', position = 'fill') +
-  ggtitle('Gana favorito por meses y deporte') +
-  theme(legend.position = 'bottom')+ 
-  scale_y_continuous(labels=percent)
