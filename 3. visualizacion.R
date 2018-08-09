@@ -19,34 +19,46 @@ visualizar$GanaFavorito = as.factor(visualizar$GanaFavorito)
 
 visualizar$Mes = as.factor(as.numeric(format(visualizar$Date, "%m")))
 
+#Creamos una carpeta para guardar los gráficos en pdf
+
 dir.create('graficos')
 
-#pdf("graficos/grafico.pdf")
+#GRÁFICO 1
 
-#1.Mes y deporte donde más gana el favorito
+pdf("graficos/grafico1.pdf")
 
 ggplot(visualizar, aes(x = Mes, y=GanaFavorito, fill = GanaFavorito)) +
   geom_bar(stat='identity')+
       facet_grid(~Sport) +
-        ggtitle('Gana favorito por meses y deporte') +
-          theme(legend.position = 'bottom')
+  theme_light()+
+  labs(subtitle="Meses donde hay más eventos deportivos", y="", x="Meses", title="Deportes") +
+  theme(legend.position = 'bottom')
 
+dev.off()
 
-#1.2Deporte por meses
+#GRÁFICO2
+
+pdf("graficos/grafico2.pdf", width = 10)
+
 ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
   geom_bar(stat='count', position = 'dodge') +
-  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
-  ggtitle('Gana favorito por deporte') + 
-  scale_y_continuous(labels=percent) + facet_grid(Sport~Mes)
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -0.6 , size = 2 , colour = 'black') + 
+  labs(subtitle="% Victoria del favorito por mes y deporte", y="Porcentaje", x="Meses", title="Gana Favorito") +
+  scale_y_continuous(labels=percent) + facet_grid(Sport~Mes, scales = 'free')
 
+dev.off()
 
-#2.Comparación de cuotas
+#GRÁFICO 3
+
+pdf("graficos/grafico3.pdf")
 
 ggplot(visualizar, aes(x = CuotaFavorito, y=..count.., col = GanaFavorito)) +
-  geom_density(kernel='gaussian') +
-  ggtitle('Cuotas') + xlim(1,3) +
-  facet_grid(Sport~., scales='free') + labs(y="") +theme_bw()  +
-  theme(legend.position = 'bottom')
+  geom_density(kernel='gaussian') + xlim(1,3) +
+  facet_grid(Sport~., scales='free') + labs(y="") +theme_bw()  + theme(legend.position = 'bottom') +
+  labs(subtitle="Eventos con más victorias del favorito por deporte", 
+       y="Total Eventos", x="Cuotas", title="Cuotas de los favoritos")
+
+dev.off()
 
 #3.Fútbol Local vs Visitante siendo favorito por meses
 
@@ -93,5 +105,4 @@ ggplot(visualizar, aes(x = Mes, y = HuchaC)) +
   stat_summary(fun.y = sum,geom="bar", colour = "red", size = 1)+
   ggtitle('Hucha') + facet_grid(Sport~. , scales = 'free')
 
-#dev.off()
-
+#¿Hucha por cuotas? Evolución para con que cuota ganaría más
