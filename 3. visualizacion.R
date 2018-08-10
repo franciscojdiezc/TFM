@@ -55,54 +55,106 @@ pdf("graficos/grafico3.pdf")
 ggplot(visualizar, aes(x = CuotaFavorito, y=..count.., col = GanaFavorito)) +
   geom_density(kernel='gaussian') + xlim(1,3) +
   facet_grid(Sport~., scales='free') + labs(y="") +theme_bw()  + theme(legend.position = 'bottom') +
-  labs(subtitle="Eventos con más victorias del favorito por deporte", 
+  labs(subtitle="Victorias y derrotas del favorito por cuota y deporte", 
        y="Total Eventos", x="Cuotas", title="Cuotas de los favoritos")
 
 dev.off()
 
-#3.Fútbol Local vs Visitante siendo favorito por meses
+#GRÁFICO 4
 
 football = visualizar[visualizar$Sport == 'Football',]
+
+pdf("graficos/grafico4.pdf", width = 10)
  
 ggplot(football, aes(x = GanaFavorito, y=..prop.., group=1,fill = GanaFavorito )) +
-  geom_bar(stat='count', position = 'dodge') +
-  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
-  ggtitle('Local vs Visitante') + 
+  geom_bar(stat='count', position = 'dodge',fill="lightblue",colour="black") +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -0.6, size = 2) + 
   scale_y_continuous(labels=percent) +
-  facet_grid(Favorito~Mes)
+  facet_grid(Favorito~Mes) + 
+  labs(subtitle="% Victorias cuando el equipo favorito es local o visitante", 
+       y="Porcentaje", x="Gana Gavorito", title="Fútbol: Local vs Visitante") +
+  theme_get()
 
+dev.off()
 
-#4. Gana Favorito
+#GRÁFICO 5
+
+pdf("graficos/grafico5.pdf")
 
 ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
-  geom_bar(stat='count', position = 'dodge') +
-  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
-  ggtitle('Gana favorito por deporte') + 
-  scale_y_continuous(labels=percent)
+  geom_bar(stat='count', position = 'dodge', fill="#0072B2",colour="red") +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5) + 
+  scale_y_continuous(labels=percent)+ 
+  labs(subtitle="Global", 
+       y="Porcentaje", x="Gana Gavorito", title="Victoria del favorito") + 
+  theme(plot.title = element_text(color="darkgreen", size=20, face="bold.italic"),
+                axis.title.x = element_text(color="blue", size=14, face="bold"),
+                axis.title.y = element_text(color="#993333", size=14, face="bold"))
 
+dev.off()
+
+#GRÁFICO 6
+
+pdf("graficos/grafico6.pdf",width = 10)
 
 ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
-  geom_bar(stat='count', position = 'dodge') +
-  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
-  ggtitle('Gana favorito por deporte') + 
-  scale_y_continuous(labels=percent) + facet_grid(~Mes)
+  geom_bar(stat='count', position = 'dodge' ,fill="lightblue",colour="white") +
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5, size = 2)+ 
+  scale_y_continuous(labels=percent) + facet_grid(~Mes) +labs(subtitle="Mes", 
+  y="Porcentaje", x="Gana Gavorito", title="% Victoria del favorito")
 
-##4.3 General por deporte
+dev.off()
+
+#GRÁFICO 7
+
+pdf("graficos/grafico7.pdf",width = 10)
+
 ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
   geom_bar(stat='count', position = 'dodge',fill="lightblue",colour="black") +
-  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5)+
-  ggtitle('Gana favorito por deporte') + 
-  scale_y_continuous(labels=percent) + facet_grid(~Sport)
+  geom_text(aes( label = scales::percent(..prop..),y= ..prop.. ), stat= "count", vjust = -.5) + 
+  scale_y_continuous(labels=percent) + facet_grid(~Sport)+labs(subtitle="Deportes", 
+  y="Porcentaje", x="Gana Gavorito", title="% Victoria del favorito")
 
+dev.off()
 
-##Hucha por deportes y meses
+#GRÁFICO 8
+
+pdf("graficos/grafico8.pdf")
 
 ggplot(visualizar, aes(x = Sport, y = HuchaC)) +
   stat_summary(fun.y = sum,geom="bar", fill="lightblue",colour="black", size = 1)+
-  ggtitle('Hucha')
+  stat_summary(aes(label = ..y..), fun.y = 'sum', geom = 'text', col = 'Black', vjust = -0.5, size = 3)+
+  labs(subtitle="Deportes", 
+  y="", x="Deportes", title="Hucha (€)") +
+  theme(axis.text.y=element_blank())
 
-ggplot(visualizar, aes(x = Mes, y = HuchaC)) +
-  stat_summary(fun.y = sum,geom="bar", colour = "red", size = 1)+
-  ggtitle('Hucha') + facet_grid(Sport~. , scales = 'free')
+dev.off()
 
-#¿Hucha por cuotas? Evolución para con que cuota ganaría más
+#GRÁFICO 9
+
+pdf("graficos/grafico9.pdf",width = 10)
+
+ggplot(visualizar, aes(x = Mes, y = HuchaC, group=1)) +
+  stat_summary(fun.y = sum,geom="bar", colour = "red", size = 1) +
+  stat_summary(fun.y = sum,geom="line", colour = "darkblue", size = 1)+
+  facet_grid(Sport~. , scales = 'free')+
+  labs(subtitle="Meses y Deportes", 
+  y="", x="Meses", title="Hucha (€)") +
+  theme(axis.text.y=element_blank())
+
+dev.off()
+
+#GRÁFICO 10
+
+pdf("graficos/grafico10.pdf",width = 10)
+
+ggplot(visualizar, aes(x = CuotaFavorito, y = HuchaC, group=1)) +
+  stat_summary_bin(fun.y = sum, geom = 'bar',colour = "darkgreen", size = 1)+
+  facet_grid(Sport~. , scales = 'free')+
+  labs(subtitle="Cuotas y Deportes", 
+       y="", x="Cuotas", title="Hucha (€)") +
+  theme(axis.text.y=element_blank()) +xlim(0.9,3)
+
+dev.off()
+
+
