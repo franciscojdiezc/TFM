@@ -157,8 +157,8 @@ ConfusionTest=table(footballTest$GanaFavorito,footballTest$prediccion>=ALPHA)
 AccuracyTest = (sum(footballTest$GanaFavorito==1 & footballTest$prediccion>=ALPHA)+sum(footballTest$GanaFavorito==0 & footballTest$prediccion<ALPHA))/length(footballTest$GanaFavorito)
 PrecisionTest=sum(footballTest$GanaFavorito==1 & footballTest$prediccion>=ALPHA)/sum(footballTest$prediccion>=ALPHA)
 CoberturaTest=sum(footballTest$GanaFavorito==1 & footballTest$prediccion>=ALPHA)/sum(footballTest$GanaFavorito==1)
-ConfusionTest #con el threshold sabemos el % de los que van a contrarar
-AccuracyTest #Cuanto acierta
+ConfusionTest
+AccuracyTest
 PrecisionTest
 CoberturaTest
 
@@ -210,37 +210,24 @@ DFF1=data.frame(ALPHAS,Accuracy,Precision,Cobertura,F1Score)
 
 DFF1
 
-#4. Beneficio y punto optimo financiero
+#4. Beneficio
 
-costeApuesta=10
-beneficioApuesta=100
+indicadores = read.csv2("Data/indicadores.csv", sep = ',')
 
-footballKS$BeneficioApuesta=footballKS
+indicadores$Indicador = as.numeric(levels(indicadores$Indicador)[indicadores$Indicador])
 
-footballKS$Beneficio=beneficioVenta-costeLlamada
-bankKS$BeneficioTN=0
-bankKS$PerdidaFP=-costeLlamada
-bankKS$PerdidaFN=-beneficioVenta
+indicadores$Indicador = indicadores$Indicador/ 10
 
-bankKS$BeneficioFinan=bankKS$EXITOSACUM*bankKS$BeneficioTP+
-  bankKS$FRACASOSACUM*bankKS$PerdidaFP
+footballConIndicadores = merge(x = football, y = indicadores, by.x = 'Probabilidad', by.y = 'CuotaFavorito')
 
-bankKS$Oportunidad=bankKS$EXITOSACUM*bankKS$BeneficioTP+
-  (bankKS$EXITOSTOT-bankKS$EXITOSACUM)*bankKS$PerdidaFN+
-  bankKS$FRACASOSACUM*bankKS$PerdidaFP+
-  (bankKS$FRACASOSTOT-bankKS$FRACASOSACUM)*bankKS$BeneficioTN
+ALPHA=0.74
 
-plot(bankKS$BeneficioFinan)
-max(bankKS$BeneficioFinan)
-which(bankKS$BeneficioFinan==max(bankKS$BeneficioFinan))
-bankKS[3646,]
+footballConIndicadores$Beneficio <- ifelse(footballConIndicadores$GanaFavorito == 1, footballConIndicadores$Indicador*footballConIndicadores$Probabilidad-footballConIndicadores$Indicador, -footballConIndicadores$Indicador)
 
-plot(bankKS$Oportunidad)
-max(bankKS$Oportunidad)
-which(bankKS$Oportunidad==max(bankKS$Oportunidad))
-bankKS[8755,]
+footballALPHA <- footballConIndicadores[footballConIndicadores$prediccion>=ALPHA,]
 
-
+BeneficioNeto = sum(footballALPHA$Beneficio)
+BeneficioNeto
 
 
 
