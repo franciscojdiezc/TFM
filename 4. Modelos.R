@@ -229,6 +229,70 @@ footballALPHA <- footballConIndicadores[footballConIndicadores$prediccion>=ALPHA
 BeneficioNeto = sum(footballALPHA$Beneficio)
 BeneficioNeto
 
+# ---
 
+  #VARIABLES DUMMIES
 
+# ---
 
+if(!require("dummies")){
+  install.packages("dummies")
+  library("dummies")
+}
+
+football2=read.csv2("Data/european_football.csv")
+
+football2$Mes=as.factor(football2$Mes)
+football2$LocalVisitante=as.factor(football2$LocalVisitante)
+football2$JuegaEuropa=as.factor(football2$JuegaEuropa)
+football2$MundialOEurocopa=as.factor(football2$MundialOEurocopa)
+
+footballDummies <- dummy.data.frame(football2)
+
+footballDummies$GanaFavorito = as.factor(footballDummies$GanaFavorito)
+
+#Aplicamos Logit
+
+modeloLogitD=glm(GanaFavorito~., data=footballDummies,family=binomial(link="logit"))
+summary(modeloLogitD)
+
+modeloLogitDFinal=step(modeloLogitD,direction="both",trace=1)
+summary(modeloLogitDFinal)
+
+anova(modeloLogitDFinal,modeloLogitD)
+
+footballDummies$prediccion=predict(modeloLogitD,type="response")
+
+footballDummies$prediccion2=predict(modeloLogitDFinal,type="response")
+
+#Entrenamiento & Test
+
+SAMPLE2 = sample.split(footballDummies$GanaFavorito, SplitRatio = .75) #Para hacer un modelo de entrenamiento y de test
+footballDTrain = subset(footballDummies, SAMPLE2 == TRUE)
+footballDTest = subset(footballDummies, SAMPLE2 == FALSE)
+
+modeloLogitDTrain=glm(GanaFavorito~., data=footballDTrain,family=binomial(link="logit"))
+
+summary(modeloLogitDTrain)
+
+footballDTrain$prediccion=predict(modeloLogitDTrain,type="response")
+PredauxiliarD= prediction(footballDTrain$prediccion, footballDTrain$GanaFavorito, label.ordering = NULL)
+auc.tmpD = performance(PredauxiliarD, "auc");
+aucModeloLogitDtrain = as.numeric(auc.tmpD@y.values)
+aucModeloLogitDtrain
+
+CurvaRocModeloLogitDTrain <- performance(PredauxiliarD,"tpr","fpr")
+plot(CurvaRocModeloLogitDTrain,colorize=TRUE)
+abline(a=0,b=1)
+
+#Test
+
+footballDTest$prediccion=predict(modeloLogitDTrain, newdata=footballDTest,type="response")
+PredauxiliarD = prediction(footballDTest$prediccion, footballDTest$GanaFavorito, label.ordering = NULL)
+auc.tmpD = performance(PredauxiliarD, "auc");
+aucModeloLogitDtest = as.numeric(auc.tmpD@y.values)
+aucModeloLogitDtest
+
+CurvaRocModeloLogitDTest <- performance(PredauxiliarD,"tpr","fpr")
+plot(CurvaRocModeloLogitDTest,colorize=TRUE)
+abline(a=0,b=1)
