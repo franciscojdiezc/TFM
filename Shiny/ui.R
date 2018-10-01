@@ -12,12 +12,17 @@ library(shiny)
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
   
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.css")
+  ),
+    
   # Application title
-  titlePanel("Precide si ganará el equipo favorito"),
+  titlePanel("Título"),
   
-  # Sidebar with a slider input for number of bins 
     sidebarPanel(
-      selectInput("Div", "Liga:", c("P1" , "SP1" , "I1" , "D1" , "E0" , "F1")),
+      selectInput("Div", "Liga:", c("Portugal" = "P1" , "España" = "SP1" ,
+                                    "Italia" = "I1" , "Alemania" = "D1" ,
+                                    "Inglaterra" = "E0" , "Francia" = "F1")),
       radioButtons("LocalVisitante", "Local:", 
                    choices = list("Local" = 1, "Visitante" = 0)),
       radioButtons("JuegaEuropa", "Juega Europa", 
@@ -31,10 +36,9 @@ shinyUI(fluidPage(
       submitButton("Predecir", icon("refresh"))
     ),
     
-    # Show a plot of the generated distribution
     mainPanel(
-      tableOutput('table'),
-      textOutput('text')
+      h1("La probabilidad de que gane el favorito es:"),textOutput('text'),
+      img(src="foto.jpg", width="100%", height= "450")
     )
   )
 )

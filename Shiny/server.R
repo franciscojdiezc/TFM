@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
     test <- as.data.frame(test,stringsAsFactors = default.stringsAsFactors())
     test$Probabilidad <- as.numeric(levels(test$Probabilidad))[test$Probabilidad]
     
-    pred = predict.glm(modeloLogit,type="response", newdata = test)
+    pred = predict.glm(modeloLogit,type="response", newdata = test)*100
     
     output$table <- renderTable({test})
     
