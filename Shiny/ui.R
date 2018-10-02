@@ -13,13 +13,24 @@ library(shiny)
 shinyUI(fluidPage(
   
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.css")
+    tags$meta(charset="utf-8"),
+    tags$meta(name="viewport", content="width=device-width, initial-scale=1.0"),
+    tags$link(rel = "shortcut icon", type = "image/png", href = "favicon.png"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css", media="all")
   ),
-    
+ 
+  tags$body(
+    tags$script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"),
+    tags$script(src="main.js")
+  ),
+
   # Application title
   titlePanel("Título"),
   
     sidebarPanel(
+      
+      h2("Instrucciones"),
+      p("En los partidos donde hay un equipo favorito, selecciona:"),
       selectInput("Div", "Liga:", c("Portugal" = "P1" , "España" = "SP1" ,
                                     "Italia" = "I1" , "Alemania" = "D1" ,
                                     "Inglaterra" = "E0" , "Francia" = "F1")),
@@ -37,8 +48,17 @@ shinyUI(fluidPage(
     ),
     
     mainPanel(
-      h1("La probabilidad de que gane el favorito es:"),textOutput('text'),
-      img(src="foto.jpg", width="100%", height= "450")
+      h1("La probabilidad de que gane el favorito es:"),h2(textOutput('text'),('%')),
+      img(src="foto.jpg", width="100%", height= "450"),
+      
+      h2("Compartir en redes sociales"),
+      tags$div(class="shared-panel",
+        tags$a(target="_blank", class="shared fb st3",title="Facebook"),
+        tags$a(target='_blank', class="shared tt st3",title="Twitter"),
+        tags$a(target='_blank', class="shared gp st3",title="Google+"),
+        tags$a(target='_blank', class="shared wa st3",title="WhatsApp"),
+        tags$a(target='_blank', class="shared ce st3", title="Email")
     )
   )
+)
 )
