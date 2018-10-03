@@ -22,10 +22,11 @@ shinyUI(fluidPage(
   tags$body(
     tags$script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"),
     tags$script(src="main.js")
+    
   ),
 
   # Application title
-  titlePanel("Título"),
+  titlePanel("", windowTitle = "BettingFav"),
   
     sidebarPanel(
       
@@ -48,8 +49,7 @@ shinyUI(fluidPage(
     ),
     
     mainPanel(
-      h1("La probabilidad de que gane el favorito es:"),h2(textOutput('text'),('%')),
-      img(src="foto.jpg", width="100%", height= "450"),
+      h1("La probabilidad de que gane el favorito es:"),h1(textOutput('text')),
       
       h2("Compartir en redes sociales"),
       tags$div(class="shared-panel",
