@@ -14,3 +14,5 @@ football$GanaFavorito=as.factor(football$GanaFavorito)
 modeloLogit=glm(GanaFavorito~Probabilidad+Mes+LocalVisitante+
                   JuegaEuropa+MundialOEurocopa, data=football,family=binomial(link="logit"))
 
+empty_df = football[FALSE,]
+empty_df = subset(empty_df, select = -GanaFavorito)

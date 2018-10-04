@@ -8,13 +8,11 @@
 #
 
 library(shiny)
+library(DT)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
-  #x <- reactive({data.frame("Div" = input$Div, "Mes" = input$Mes  , 'Probabilidad' = input$Probabilidad,
-                  #'LocalVisitante' = input$LocalVisitante,'JuegaEuropa' = input$JuegaEuropa,
-                  #'MundialOEurocopa' = input$MundialOEurocopa)})
   observe({              
     Div <- as.character(input$Div)
     Mes <- as.integer(input$Mes)
@@ -23,13 +21,13 @@ shinyServer(function(input, output) {
     JuegaEuropa <- as.integer(input$JuegaEuropa)
     MundialOEurocopa <- as.integer(input$MundialOEurocopa)
 
-    test <- cbind(Div, Mes, Probabilidad, LocalVisitante, JuegaEuropa, MundialOEurocopa)
-    test <- as.data.frame(test,stringsAsFactors = default.stringsAsFactors())
-    test$Probabilidad <- as.numeric(levels(test$Probabilidad))[test$Probabilidad]
+    table1 <- cbind(Div, Mes, Probabilidad, LocalVisitante, JuegaEuropa, MundialOEurocopa)
+    table1 <- as.data.frame(table1,stringsAsFactors = default.stringsAsFactors())
+    table1$Probabilidad <- as.numeric(levels(table1$Probabilidad))[table1$Probabilidad]
     
-    pred = predict.glm(modeloLogit,type="response", newdata = test)*100
+    pred = predict.glm(modeloLogit,type="response", newdata = table1)*100
     
-    output$table <- renderTable({test})
+    output$table <- renderDT({table1})
     
     output$text <- renderText({pred})
     
