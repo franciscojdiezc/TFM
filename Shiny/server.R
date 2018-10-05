@@ -8,7 +8,6 @@
 #
 
 library(shiny)
-library(DT)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -27,7 +26,7 @@ shinyServer(function(input, output) {
     
     pred = predict.glm(modeloLogit,type="response", newdata = table1)*100
     
-    output$table <- renderDT({table1})
+    output$table <- renderTable({table1})
     
     output$text <- renderText({pred})
     

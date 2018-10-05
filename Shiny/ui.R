@@ -54,8 +54,9 @@ shinyUI(fluidPage(
       tabsetPanel(type = 'tabs',
                   
         tabPanel("Probabilidad",
-          h1("La probabilidad de que gane el favorito es:"),h1(textOutput('text'),
-          h2("Compartir en redes sociales"),
+          h1("La probabilidad de que gane el favorito es:"),
+          h2(textOutput('text'),
+          h3("Compartir en redes sociales"),
            tags$div(class="shared-panel",
            tags$a(target="_blank", class="shared fb st3",title="Facebook"),
            tags$a(target='_blank', class="shared tt st3",title="Twitter"),
@@ -64,7 +65,7 @@ shinyUI(fluidPage(
            tags$a(target='_blank', class="shared ce st3", title="Email")))),
           
         tabPanel("Resumen",
-          DTOutput("table"),
+          tags$table(tableOutput("table")),
           downloadButton("downloadData", "Download")))
 )
 )
