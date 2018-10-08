@@ -37,7 +37,10 @@ shinyUI(fluidPage(
                    min = 1.01, max = 100, step = 0.01),
       submitButton("Predecir"),
       br(),
-      actionButton("Predecir", label = 'Pulsa primero para poder guardar la predicción', icon("save"))
+      actionButton("Predecir", label = 'Pulsa primero para poder guardar la predicción', icon("save")),
+      br(),
+      br(),
+      downloadButton("downloadData", "Descarga las predicciones en csv")
       
     ),
     
@@ -57,8 +60,8 @@ shinyUI(fluidPage(
            tags$a(target='_blank', class="shared ce st3", title="Email")))),
           
         tabPanel("Resumen",
-          tags$table(tableOutput("table")),
-          downloadButton("download", "Descarga la predicción")))
+          tags$table(tableOutput("table"))
+          ))
 )
 )
 )

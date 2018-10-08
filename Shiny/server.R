@@ -51,11 +51,14 @@ shinyServer(function(input, output) {
     
     output$table <- renderTable({values$df}, include.rownames=F)
     
-    output$download <- downloadHandler(
-      filename = function(){"thename.csv"}, 
-      content = function(fname){
-        write.csv(table1, fname)
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste("predicciones",".csv", sep="")
+      },
+      content = function(file) {
+        write.csv(values$df, file)
+      })
+      contentType = "text/csv"
+
       })
   })
-
-})
