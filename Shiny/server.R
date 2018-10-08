@@ -1,15 +1,5 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
   observe({              
@@ -26,10 +16,46 @@ shinyServer(function(input, output) {
     
     pred = predict.glm(modeloLogit,type="response", newdata = table1)*100
     
-    output$table <- renderTable({table1})
+    table1$Prediccion = predict.glm(modeloLogit,type="response", newdata = table1)*100
     
     output$text <- renderText({pred})
-    
+   
   })
+
+  values <- reactiveValues()
+  
+  values$df <- data.frame('Div' ="", 'Mes'="", 'Probabilidad'="", 'LocalVisitante'="", 'JuegaEuropa'="",
+                          'MundialOEurocopa'="", 'Prediccion'="")
     
+    observe({
+      
+      Div <- as.character(input$Div)
+      Mes <- as.integer(input$Mes)
+      Probabilidad <- as.numeric(input$Probabilidad)
+      LocalVisitante <- as.integer(input$LocalVisitante)
+      JuegaEuropa <- as.integer(input$JuegaEuropa)
+      MundialOEurocopa <- as.integer(input$MundialOEurocopa)
+      
+    if(input$Predecir > 0) {
+      
+      table2 <- cbind(Div, Mes, Probabilidad, LocalVisitante, JuegaEuropa, MundialOEurocopa)
+      table2 <- as.data.frame(table2,stringsAsFactors = default.stringsAsFactors())
+      table2$Probabilidad <- as.numeric(levels(table2$Probabilidad))[table2$Probabilidad]
+      table2$Prediccion <- predict.glm(modeloLogit,type="response", newdata = table2)*100
+      
+      table2$Probabilidad <- as.character(table2$Probabilidad)
+      table2$Prediccion <- as.character(table2$Prediccion)
+      
+      isolate(values$df <- rbind(as.matrix(values$df), table2))
+      }
+    
+    output$table <- renderTable({values$df}, include.rownames=F)
+    
+    output$download <- downloadHandler(
+      filename = function(){"thename.csv"}, 
+      content = function(fname){
+        write.csv(table1, fname)
+      })
   })
+
+})
