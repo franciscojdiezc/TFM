@@ -1,1 +1,1 @@
-# Todos los datos sobre el trabajo están en la memoria.
+# Toda la información sobre el trabajo está en la memoria.
