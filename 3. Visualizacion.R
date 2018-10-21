@@ -23,7 +23,7 @@ visualizar$Mes = as.factor(as.numeric(format(visualizar$Date, "%m")))
 
 dir.create('graficos')
 
-#GRÁFICO 1
+#GRAFICO1
 
 pdf("graficos/grafico1.pdf")
 
@@ -31,12 +31,12 @@ ggplot(visualizar, aes(x = Mes, y=GanaFavorito, fill = GanaFavorito)) +
   geom_bar(stat='identity')+
       facet_grid(~Sport) +
   theme_light()+
-  labs(subtitle="Meses donde hay más eventos deportivos", y="", x="Meses", title="Deportes") +
+  labs(subtitle="Meses donde hay mas eventos deportivos", y="", x="Meses", title="Deportes") +
   theme(legend.position = 'bottom')
 
 dev.off()
 
-#GRÁFICO2
+#GRAFICO2
 
 pdf("graficos/grafico2.pdf", width = 10)
 
@@ -48,7 +48,7 @@ ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
 
 dev.off()
 
-#GRÁFICO 3
+#GRAFICO 3
 
 pdf("graficos/grafico3.pdf")
 
@@ -60,7 +60,7 @@ ggplot(visualizar, aes(x = CuotaFavorito, y=..count.., col = GanaFavorito)) +
 
 dev.off()
 
-#GRÁFICO 4
+#GRAFICO 4
 
 football = visualizar[visualizar$Sport == 'Football',]
 
@@ -72,12 +72,12 @@ ggplot(football, aes(x = GanaFavorito, y=..prop.., group=1,fill = GanaFavorito )
   scale_y_continuous(labels=percent) +
   facet_grid(Favorito~Mes) + 
   labs(subtitle="% Victorias cuando el equipo favorito es local o visitante", 
-       y="Porcentaje", x="Gana Gavorito", title="Fútbol: Local vs Visitante") +
+       y="Porcentaje", x="Gana Gavorito", title="Futbol: Local vs Visitante") +
   theme_get()
 
 dev.off()
 
-#GRÁFICO 5
+#GRAFICO 5
 
 pdf("graficos/grafico5.pdf")
 
@@ -93,7 +93,7 @@ ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
 
 dev.off()
 
-#GRÁFICO 6
+#GRAFICO 6
 
 pdf("graficos/grafico6.pdf",width = 10)
 
@@ -105,7 +105,7 @@ ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
 
 dev.off()
 
-#GRÁFICO 7
+#GRAFICO 7
 
 pdf("graficos/grafico7.pdf",width = 10)
 
@@ -117,7 +117,7 @@ ggplot(visualizar, aes(x = GanaFavorito, y= ..prop.., group = 1)) +
 
 dev.off()
 
-#GRÁFICO 8
+#GRAFICO 8
 
 pdf("graficos/grafico8.pdf")
 
@@ -125,12 +125,12 @@ ggplot(visualizar, aes(x = Sport, y = HuchaC)) +
   stat_summary(fun.y = sum,geom="bar", fill="lightblue",colour="black", size = 1)+
   stat_summary(aes(label = ..y..), fun.y = 'sum', geom = 'text', col = 'Black', vjust = -0.5, size = 3)+
   labs(subtitle="Deportes", 
-  y="", x="Deportes", title="Hucha (€)") +
+  y="", x="Deportes", title="Hucha (Euros)") +
   theme(axis.text.y=element_blank())
 
 dev.off()
 
-#GRÁFICO 9
+#GRAFICO 9
 
 pdf("graficos/grafico9.pdf",width = 10)
 
@@ -139,12 +139,12 @@ ggplot(visualizar, aes(x = Mes, y = HuchaC, group=1)) +
   stat_summary(fun.y = sum,geom="line", colour = "darkblue", size = 1)+
   facet_grid(Sport~. , scales = 'free')+
   labs(subtitle="Meses y Deportes", 
-  y="", x="Meses", title="Hucha (€)") +
+  y="", x="Meses", title="Hucha (Euros)") +
   theme(axis.text.y=element_blank())
 
 dev.off()
 
-#GRÁFICO 10
+#GRAFICO 10
 
 pdf("graficos/grafico10.pdf",width = 10)
 
@@ -152,7 +152,7 @@ ggplot(visualizar, aes(x = CuotaFavorito, y = HuchaC, group=1)) +
   stat_summary_bin(fun.y = sum, geom = 'bar',colour = "darkgreen", size = 1)+
   facet_grid(Sport~. , scales = 'free')+
   labs(subtitle="Cuotas y Deportes", 
-       y="", x="Cuotas", title="Hucha (€)") +
+       y="", x="Cuotas", title="Hucha (Euros)") +
   theme(axis.text.y=element_blank()) +xlim(0.9,3)
 
 dev.off()
