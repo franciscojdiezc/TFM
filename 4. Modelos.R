@@ -25,6 +25,7 @@ if (!require("glmnet")){
   install.packages("glmnet") 
   library("glmnet")
 }
+
 #2. Cargamos el fichero
 
 football=read.csv2("Data/european_football.csv")
